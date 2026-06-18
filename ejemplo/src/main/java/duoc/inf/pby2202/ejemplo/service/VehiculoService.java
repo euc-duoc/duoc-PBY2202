@@ -1,6 +1,7 @@
 package duoc.inf.pby2202.ejemplo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,9 @@ public class VehiculoService {
 
     public Vehiculo crearVehiculo(Vehiculo data) {
         return repo.save(data);
+    }
+
+    public Optional<Vehiculo> obtenerVehiculoPorId(int id) {
+        return repo.findById(id);
     }
 }
