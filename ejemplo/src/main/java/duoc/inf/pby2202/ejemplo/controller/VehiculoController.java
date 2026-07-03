@@ -13,8 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import duoc.inf.pby2202.ejemplo.model.Vehiculo;
 import duoc.inf.pby2202.ejemplo.service.VehiculoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-
+// Guía de anotaciones para Swagger
+// https://medium.com/dev-spring/mastering-swagger-annotations-for-sring-boot-3c11be67562f
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +32,22 @@ public class VehiculoController {
         this.service = service;
     }
 
+    @Operation(
+        summary = "Obtiene la lista de vehículos.",
+        description = "Obtiene la lista completa de vehículos que está almacenada en la BD.",
+        tags = {"Vehiculos"}
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200", 
+            description = "Lista generada correctamente.",
+            content = @Content(
+                mediaType = "application/json",
+                array = @ArraySchema(schema = @Schema(implementation = Vehiculo.class))
+            )
+        ),
+        @ApiResponse(responseCode = "401", description = "No hay acceso a la API.")
+    })
     @GetMapping("/vehiculos")
     public ResponseEntity<List<Vehiculo>> obtenerVehiculos() {
         List<Vehiculo> vehiculos = service.obtenerVehiculos();
@@ -34,7 +57,15 @@ public class VehiculoController {
         
         return ResponseEntity.ok(vehiculos);
     }
-
+    
+    @Operation(summary = "Crea un nuevo vehículo en el sistema.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Datos del vehículo que se va a crear.",
+        required = true,
+        content = @Content(
+            schema = @Schema(implementation = Vehiculo.class)
+        )
+    )
     @PostMapping("/vehiculos")
     public ResponseEntity<?> guardarVehiculo(@RequestBody Vehiculo datos) {
         try {

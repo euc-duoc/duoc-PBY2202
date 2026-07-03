@@ -55,8 +55,9 @@ public class WebSecurityConfig {
                             org.springframework.security.config.http.SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(a -> a
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/**").permitAll()
+                //.anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
